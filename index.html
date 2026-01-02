@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Muybien - Enjoy your life</title>
+    <style>
+        /* Web 2.0 Glossy & Skeuomorphic Base */
+        body {
+            background: #d1d9e1 url('https://www.transparenttextures.com/patterns/light-gray.png');
+            font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            line-height: 1.5;
+            scroll-behavior: smooth; /* 平滑滚动 */
+        }
+
+        /* 全局平滑过渡 */
+        * { transition: all 0.25s ease-out; }
+
+        header {
+            background: linear-gradient(to bottom, #4c4c4c 0%, #111111 100%);
+            height: 50px;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            font-size: 15px;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 900;
+            color: #fff;
+            text-transform: lowercase;
+            letter-spacing: -1px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+            cursor: pointer;
+            font-style: italic;
+        }
+        .logo:hover { text-shadow: 0 0 15px #fff; transform: scale(1.05); }
+
+        /* --- Search Area --- */
+        .search-area {
+            text-align: center;
+            padding: 40px 0;
+            background: rgba(255,255,255,0.4);
+            border-bottom: 1px solid #bbb;
+        }
+
+        .tab {
+            display: inline-block;
+            padding: 10px 25px;
+            background: #e1e1e1;
+            border: 1px solid #bbb;
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 0 3px;
+        }
+        .tab:hover { background: #f9f9f9; transform: translateY(-3px); }
+        .tab.active { background: #fff; border-top: 4px solid #4285f4; padding-top: 12px; margin-top: -4px; }
+
+        .search-box-container {
+            display: inline-block;
+            background: white;
+            padding: 6px;
+            border-radius: 40px;
+            border: 1px solid #bbb;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .search-box-container:hover { box-shadow: 0 6px 20px rgba(66, 133, 244, 0.2); border-color: #4285f4; }
+
+        .search-wrapper {
+            display: flex;
+            align-items: center;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 35px;
+            background: #fff;
+        }
+
+        .search-input {
+            width: 500px;
+            border: none;
+            outline: none;
+            padding: 12px 20px;
+            font-size: 18px;
+            background: transparent;
+        }
+
+        .search-btn {
+            background: linear-gradient(to bottom, #4285f4, #357ae8);
+            color: white;
+            border: 1px solid #2f5bb7;
+            padding: 10px 30px;
+            border-radius: 30px;
+            margin: 3px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        /* --- New Navigation Bar Style --- */
+        .quick-nav-container {
+            max-width: 1400px;
+            margin: -25px auto 10px; /* 向上偏移贴合搜索区 */
+            padding: 0 20px;
+        }
+        .quick-nav-bar {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .quick-nav-bar:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        .nav-item {
+            text-decoration: none;
+            color: #444;
+            font-weight: bold;
+            font-size: 15px;
+            padding: 10px 25px;
+            background: linear-gradient(to bottom, #fcfcfc 0%, #e8e8e8 100%);
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-item:hover {
+            background: linear-gradient(to bottom, #4285f4 0%, #357ae8 100%);
+            color: white;
+            border-color: #2f5bb7;
+            transform: scale(1.05);
+        }
+
+        /* --- Layout --- */
+        .container {
+            max-width: 1400px;
+            margin: 20px auto;
+            display: grid;
+            grid-template-columns: 240px 1fr 240px;
+            gap: 25px;
+            padding: 0 20px;
+        }
+
+        .card, .weather-card, .ad-box {
+            background: rgba(255,255,255,0.9);
+            border-radius: 12px;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+        .card:hover, .weather-card:hover, .ad-box:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            border-color: #999;
+        }
+
+        .card-header {
+            background: linear-gradient(to bottom, #fcfcfc, #e8e8e8);
+            padding: 12px 20px;
+            font-weight: bold;
+            font-size: 16px;
+            border-bottom: 1px solid #ccc;
+            color: #222;
+        }
+
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            padding: 20px;
+            gap: 15px 20px;
+        }
+
+        .site-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #3366cc;
+            font-size: 15px;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+        .site-link:hover {
+            background: #f0f4ff;
+            text-decoration: underline;
+            padding-left: 18px;
+            color: #000;
+        }
+
+        .site-link img { 
+            width: 24px;
+            height: 24px; 
+            margin-right: 12px;
+            border-radius: 4px;
+        }
+
+        .weather-card {
+            background: linear-gradient(135deg, #1e90ff, #00bfff);
+            color: white;
+            padding: 25px 15px;
+            text-align: center;
+            border: none;
+        }
+        .temp { font-size: 42px; font-weight: bold; margin: 10px 0; }
+
+        footer { text-align: center; padding: 50px; font-size: 14px; color: #777; border-top: 1px solid #ccc; }
+
+        #snakeGame:focus { outline: none; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">Muybien</div>
+    <div id="date-display" style="margin-left: auto; font-weight: 500;">--</div>
+</header>
+
+<div class="search-area">
+    <div class="search-tabs">
+        <span class="tab active" onclick="setEngine('google', this)">Google</span>
+        <span class="tab" onclick="setEngine('bing', this)">Bing</span>
+        <span class="tab" onclick="setEngine('duck', this)">DuckDuckGo</span>
+    </div>
+    <div class="search-box-container">
+        <div class="search-wrapper">
+            <input type="text" id="main-search" class="search-input" placeholder="Search with Google..." autofocus>
+            <button class="search-btn" onclick="performSearch()">Search</button>
+        </div>
+    </div>
+</div>
+
+<!-- 新增的快速导航 Bar -->
+<div class="quick-nav-container">
+    <div class="quick-nav-bar">
+        <a href="#" class="nav-item">🏠 Home</a>
+        <a href="#ai-category" class="nav-item">✨ AI Tools</a>
+        <a href="#social-category" class="nav-item">👥 Social</a>
+        <a href="#crypto-category" class="nav-item">₿ Crypto</a>
+        <a href="#shopping-category" class="nav-item">🛒 Shopping</a>
+        <a href="https://justinkwo.blogspot.com/" class="nav-item" target="_blank">📝 Blog</a>
+    </div>
+</div>
+
+<div class="container">
+    <aside>
+        <div class="weather-card">
+            <div style="font-size: 14px; opacity: 0.9;">Local Forecast</div>
+            <div id="weather-city" style="font-weight: bold; font-size: 18px;">Locating...</div>
+            <div class="temp" id="temp-display">--°C</div>
+            <div id="weather-desc" style="font-size: 14px;">Loading...</div>
+        </div>
+
+        <div class="card" style="padding: 15px;">
+            <div class="card-header" style="margin: -15px -15px 15px -15px; font-size: 15px;">Daily Inspiration</div>
+            <div id="quote-container" style="padding-top: 10px;">
+                <div id="quote-text" style="font-style: italic; font-size: 14px; color: #444; line-height: 1.4;">"Loading wisdom..."</div>
+                <div id="quote-author" style="text-align: right; font-size: 12px; color: #888; margin-top: 8px; font-weight: bold;"></div>
+            </div>
+        </div>
+
+        <div class="card" id="blogger-card" style="padding: 15px;">
+            <div class="card-header" style="margin: -15px -15px 15px -15px; font-size: 15px; display: flex; align-items: center;">
+                <img src="https://www.google.com/s2/favicons?sz=64&domain=blogger.com" style="width:20px; height:20px; margin-right:8px;">
+                Blogger Posts
+            </div>
+            <div id="blogger-content" style="padding-top: 10px;">
+                <div style="font-size: 13px; color: #888;">Fetching...</div>
+            </div>
+        </div>
+    </aside>
+
+    <main>
+        <!-- AI Category -->
+        <div class="card" id="ai-category">
+            <div class="card-header">✨ Artificial Intelligence</div>
+            <div class="link-grid">
+                <a href="https://chatgpt.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=openai.com">ChatGPT</a>
+                <a href="https://claude.ai" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=anthropic.com">Claude AI</a>
+                <a href="https://gemini.google.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=google.com">Gemini</a>
+                <a href="https://www.perplexity.ai" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=perplexity.ai">Perplexity</a>
+                <a href="https://deepseek.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=deepseek.com">DeepSeek</a>
+                <a href="https://huggingface.co" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=huggingface.co">HuggingFace</a>
+            </div>
+        </div>
+
+        <!-- Social Category -->
+        <div class="card" id="social-category">
+            <div class="card-header">👥 Social Networks & Community</div>
+            <div class="link-grid">
+                <a href="https://www.facebook.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=facebook.com">Facebook</a>
+                <a href="https://www.twitter.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=twitter.com">Twitter (X)</a>
+                <a href="https://www.instagram.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=instagram.com">Instagram</a>
+                <a href="https://www.reddit.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=reddit.com">Reddit</a>
+                <a href="https://www.naver.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=naver.com">Naver (KR)</a>
+                <a href="https://www.yahoo.co.jp" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=yahoo.co.jp">Yahoo! JP</a>
+                <a href="https://www.dcinside.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=dcinside.com">DC Inside</a>
+                <a href="https://www.2ch.sc" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=2ch.sc">2channel</a>
+                <a href="https://www.tumblr.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=tumblr.com">Tumblr</a>
+            </div>
+        </div>
+
+        <!-- Crypto Category -->
+        <div class="card" id="crypto-category">
+            <div class="card-header">₿ Crypto & Web3 Ecosystem</div>
+            <div class="link-grid">
+                <a href="https://www.binance.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=binance.com">Binance</a>
+                <a href="https://www.coinbase.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=coinbase.com">Coinbase</a>
+                <a href="https://coinmarketcap.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=coinmarketcap.com">CoinMarketCap</a>
+                <a href="https://www.upbit.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=upbit.com">Upbit (KR)</a>
+                <a href="https://bitflyer.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=bitflyer.com">bitFlyer (JP)</a>
+                <a href="https://metamask.io" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=metamask.io">MetaMask</a>
+            </div>
+        </div>
+
+        <!-- Shopping Category -->
+        <div class="card" id="shopping-category">
+            <div class="card-header">🛒 Global Shopping & Trade</div>
+            <div class="link-grid">
+                <a href="https://www.amazon.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=amazon.com">Amazon</a>
+                <a href="https://www.ebay.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=ebay.com">eBay</a>
+                <a href="https://www.rakuten.co.jp" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=rakuten.co.jp">Rakuten JP</a>
+                <a href="https://www.coupang.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=coupang.com">Coupang KR</a>
+                <a href="https://www.gmarket.co.kr" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=gmarket.co.kr">Gmarket KR</a>
+                <a href="https://www.kakaku.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=kakaku.com">Kakaku JP</a>
+            </div>
+        </div>
+    </main>
+
+    <aside>
+        <div class="card" style="height: 400px;">
+            <div class="card-header">Live Markets</div>
+            <div class="tradingview-widget-container">
+                <div class="tradingview-widget-container__widget"></div>
+                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+                {
+                  "colorTheme": "light", "dateRange": "12M", "showChart": false, "locale": "en", "width": "100%", "height": "100%",
+                  "isTransparent": true, "showSymbolLogo": true,
+                  "tabs": [
+                    { "title": "Markets", "symbols": [
+                        { "s": "BINANCE:BTCUSDT", "d": "Bitcoin" }, { "s": "NASDAQ:NVDA", "d": "NVIDIA" },
+                        { "s": "TVC:NI225", "d": "Nikkei 225" }, { "s": "NASDAQ:AAPL", "d": "Apple" }
+                    ]}
+                  ]
+                }
+                </script>
+            </div>
+        </div>
+
+        <div class="card" id="game-card" style="padding: 15px; text-align: center;">
+            <div class="card-header" style="margin: -15px -15px 15px -15px; font-size: 15px;">🕹️ Snake</div>
+            <div style="margin-top: 10px; background: #222; border-radius: 8px; position: relative;">
+                <canvas id="snakeGame" width="200" height="200"></canvas>
+                <div id="game-over" style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); color:white; background:rgba(0,0,0,0.8); width:100%; padding:10px 0;">
+                    OVER<br><button onclick="resetGame()" style="cursor:pointer;">Restart</button>
+                </div>
+            </div>
+            <div style="font-size: 12px; margin-top: 5px;">Score: <span id="game-score">0</span></div>
+        </div>
+    </aside>
+</div>
+
+<footer>
+    <p>&copy; 2015 Muybien Personal Portal.</p>
+</footer>
+
+<script>
+    // --- 搜索引擎 ---
+    let currentEngine = 'google';
+    const searchInput = document.getElementById('main-search');
+    const searchBtn = document.querySelector('.search-btn');
+    function setEngine(engine, el) {
+        currentEngine = engine;
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+        const colors = { 'duck': '#de5833', 'bing': '#00809d', 'google': '#4285f4' };
+        searchBtn.style.background = `linear-gradient(to bottom, ${colors[engine]}, #333)`;
+    }
+    function performSearch() {
+        const q = searchInput.value;
+        if(!q) return;
+        const urls = {
+            'google': `https://www.google.com/search?q=${encodeURIComponent(q)}`,
+            'bing': `https://www.bing.com/search?q=${encodeURIComponent(q)}`,
+            'duck': `https://duckduckgo.com/?q=${encodeURIComponent(q)}`
+        };
+        window.open(urls[currentEngine], '_blank');
+    }
+    searchInput.onkeydown = (e) => { if(e.key === 'Enter') performSearch(); };
+
+    // --- 天气 ---
+    async function initWeather() {
+        const cityEl = document.getElementById('weather-city');
+        cityEl.onclick = changeCity;
+        const savedCity = localStorage.getItem('user_city_data');
+        if (savedCity) {
+            const data = JSON.parse(savedCity);
+            fetchWeatherData(data.lat, data.lon, data.name);
+        } else {
+            try {
+                const res = await fetch('https://ipwho.is/');
+                const data = await res.json();
+                if (data.success) fetchWeatherData(data.latitude, data.longitude, data.city);
+            } catch (e) { fetchWeatherData(35.68, 139.76, "Tokyo"); }
+        }
+    }
+    async function changeCity() {
+        const newCity = prompt("Enter City Name:");
+        if (!newCity) return;
+        try {
+            const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(newCity)}&limit=1`);
+            const data = await res.json();
+            if (data.length > 0) {
+                const cityData = { lat: data[0].lat, lon: data[0].lon, name: data[0].display_name.split(',')[0] };
+                localStorage.setItem('user_city_data', JSON.stringify(cityData));
+                fetchWeatherData(cityData.lat, cityData.lon, cityData.name);
+            }
+        } catch (e) { alert("Busy"); }
+    }
+    async function fetchWeatherData(lat, lon, cityName) {
+        try {
+            const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+            const data = await res.json();
+            document.getElementById('weather-city').innerText = cityName; 
+            document.getElementById('temp-display').innerText = Math.round(data.current_weather.temperature) + "°C";
+            document.getElementById('weather-desc').innerText = "Clear Sky";
+        } catch (e) {}
+    }
+
+    // --- 贪吃蛇 ---
+    const canvas = document.getElementById('snakeGame');
+    const ctx = canvas.getContext('2d');
+    const gameOverEl = document.getElementById('game-over');
+    let box = 10, score = 0, gameActive = true, d, snake = [{x:100,y:100}], food = {x:50,y:50};
+    document.addEventListener("keydown", (e) => {
+        if([37,38,39,40].includes(e.keyCode)) e.preventDefault();
+        if(e.keyCode==37 && d!="RIGHT") d="LEFT";
+        if(e.keyCode==38 && d!="DOWN") d="UP";
+        if(e.keyCode==39 && d!="LEFT") d="RIGHT";
+        if(e.keyCode==40 && d!="UP") d="DOWN";
+    });
+    function draw() {
+        if(!gameActive) return;
+        ctx.fillStyle = "#222"; ctx.fillRect(0,0,200,200);
+        if(!d) {
+            ctx.fillStyle="white"; ctx.textAlign="center"; ctx.fillText("Press Keys",100,100); return;
+        }
+        snake.forEach((s,i) => { ctx.fillStyle=(i==0)?"#4285F4":"#A1C4FD"; ctx.fillRect(s.x,s.y,box,box); });
+        ctx.fillStyle="#FF5252"; ctx.fillRect(food.x,food.y,box,box);
+        let hX = snake[0].x, hY = snake[0].y;
+        if(d=="LEFT") hX-=box; if(d=="UP") hY-=box; if(d=="RIGHT") hX+=box; if(d=="DOWN") hY+=box;
+        if(hX==food.x && hY==food.y) {
+            score++; document.getElementById('game-score').innerText=score;
+            food={x:Math.floor(Math.random()*20)*box, y:Math.floor(Math.random()*20)*box};
+        } else snake.pop();
+        let nH = {x:hX, y:hY};
+        if(hX<0||hX>=200||hY<0||hY>=200||snake.some(s=>s.x==nH.x&&s.y==nH.y)) {
+            gameActive=false; gameOverEl.style.display="block";
+        }
+        snake.unshift(nH);
+    }
+    let gameLoop = setInterval(draw, 100);
+    function resetGame() {
+        score=0; snake=[{x:100,y:100}]; d=null; gameActive=true; gameOverEl.style.display="none";
+    }
+
+    // --- Blogger & Quote ---
+    async function updateQuote() {
+        try {
+            const res = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://zenquotes.io/api/random'));
+            const data = await res.json();
+            const q = JSON.parse(data.contents)[0];
+            document.getElementById('quote-text').innerText = `"${q.q}"`;
+            document.getElementById('quote-author').innerText = `— ${q.a}`;
+        } catch(e) {}
+    }
+    async function fetchBloggerPosts() {
+        try {
+            const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://justinkwo.blogspot.com/feeds/posts/default?alt=json&max-results=3')}`);
+            const data = await res.json();
+            const entries = JSON.parse(data.contents).feed.entry;
+            document.getElementById('blogger-content').innerHTML = entries.map(e => `
+                <li style="margin-bottom:8px"><a href="${e.link.find(l=>l.rel=='alternate').href}" target="_blank" class="site-link" style="padding:0; font-size:14px">• ${e.title.$t}</a></li>
+            `).join('');
+        } catch(e) {}
+    }
+
+    // --- Init ---
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('date-display').innerText = new Date().toLocaleDateString('en-US', {month:'long', day: 'numeric', year: 'numeric'});
+        initWeather(); updateQuote(); fetchBloggerPosts();
+    });
+</script>
+</body>
+</html>
