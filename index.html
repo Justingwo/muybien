@@ -27,6 +27,8 @@
             padding: 0 30px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.3);
             font-size: 15px;
+            position: relative;
+            z-index: 10;
         }
 
         .logo {
@@ -44,22 +46,33 @@
         /* --- Search Area --- */
         .search-area {
             text-align: center;
-            padding: 40px 0;
+            /* 增加了 padding-top 确保 Tab 标签不会挡住 Header */
+            padding: 60px 0 30px; 
             background: rgba(255,255,255,0.4);
             border-bottom: 1px solid #bbb;
         }
 
+        .search-tabs {
+            display: inline-flex;
+            gap: 8px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100%);
+            top: 0;
+            z-index: 3;
+        }
+
         .tab {
             display: inline-block;
-            padding: 10px 25px;
+            padding: 10px 20px;
             background: #e1e1e1;
             border: 1px solid #bbb;
             border-bottom: none;
-            border-radius: 8px 8px 0 0;
+            border-radius: 20px 20px 0 0;
             cursor: pointer;
             font-size: 14px;
             font-weight: bold;
-            margin: 0 3px;
+            margin: 0;
         }
         .tab:hover { background: #f9f9f9; transform: translateY(-3px); }
         .tab.active { background: #fff; border-top: 4px solid #4285f4; padding-top: 12px; margin-top: -4px; }
@@ -67,10 +80,13 @@
         .search-box-container {
             display: inline-block;
             background: white;
-            padding: 6px;
+            padding: 10px 8px 8px;
             border-radius: 40px;
             border: 1px solid #bbb;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1;
+            min-width: 520px;
         }
         .search-box-container:hover { box-shadow: 0 6px 20px rgba(66, 133, 244, 0.2); border-color: #4285f4; }
 
@@ -106,7 +122,8 @@
         /* --- New Navigation Bar Style --- */
         .quick-nav-container {
             max-width: 1400px;
-            margin: -25px auto 10px; /* 向上偏移贴合搜索区 */
+            /* 移除了负边距，改为向下间距 25px */
+            margin: 25px auto 25px; 
             padding: 0 20px;
         }
         .quick-nav-bar {
@@ -142,6 +159,15 @@
             color: white;
             border-color: #2f5bb7;
             transform: scale(1.05);
+        }
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            color: #a0a9b5;
+            margin-right: 8px;
+        }
+        .nav-item:hover .nav-icon {
+            color: white;
         }
 
         /* --- Layout --- */
@@ -179,9 +205,9 @@
 
         .link-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             padding: 20px;
-            gap: 15px 20px;
+            gap: 12px 15px;
         }
 
         .site-link {
@@ -213,92 +239,408 @@
             padding: 25px 15px;
             text-align: center;
             border: none;
+            position: relative;
+            overflow: hidden;
+        }
+        .weather-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+        .weather-card-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* --- 天气效果样式 --- */
+        /* 晴天效果 */
+        .weather-card.weather-clear::before {
+            background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 30% 20%, rgba(255,200,0,0.1) 0%, transparent 70%);
+        }
+        .weather-sun {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle, #FFD700, #FFA500);
+            border-radius: 50%;
+            top: -10px;
+            right: -10px;
+            box-shadow: 0 0 30px rgba(255,200,0,0.6);
+            z-index: 1;
+        }
+
+        /* 多云效果 */
+        .weather-cloud {
+            position: absolute;
+            background: rgba(255,255,255,0.7);
+            border-radius: 100px;
+            opacity: 0.8;
+            z-index: 1;
+        }
+        .weather-cloud-1 {
+            width: 60px;
+            height: 25px;
+            top: 5px;
+            left: 10px;
+            animation: float 6s ease-in-out infinite;
+        }
+        .weather-cloud-2 {
+            width: 45px;
+            height: 20px;
+            top: 35px;
+            right: 15px;
+            animation: float 8s ease-in-out infinite 1s;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateX(0px); }
+            50% { transform: translateX(10px); }
+        }
+
+        /* 下雨效果 */
+        .weather-rain {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        .raindrop {
+            position: absolute;
+            width: 2px;
+            height: 10px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 1px;
+            animation: rain-fall 0.6s linear infinite;
+        }
+        @keyframes rain-fall {
+            0% {
+                transform: translateY(-10px);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(80px);
+                opacity: 0;
+            }
+        }
+
+        /* 下雪效果 */
+        .snowflake {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 5px rgba(255,255,255,0.8);
+            animation: snowfall 3s linear infinite;
+        }
+        @keyframes snowfall {
+            0% {
+                transform: translateY(-10px) translateX(0px);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100px) translateX(20px);
+                opacity: 0;
+            }
+        }
+
+        /* 雾效果 */
+        .weather-card.weather-fog::before {
+            background: repeating-linear-gradient(
+                90deg,
+                rgba(255,255,255,0.1),
+                rgba(255,255,255,0.1) 2px,
+                transparent 2px,
+                transparent 4px
+            );
+            animation: fog-move 2s linear infinite;
+        }
+        @keyframes fog-move {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(4px); }
+        }
+
+        /* 雷暴效果 */
+        .weather-lightning {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            background: none;
+        }
+        .lightning-flash {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.8);
+            opacity: 0;
+            animation: lightning-strike 0.3s ease-in-out;
+        }
+        @keyframes lightning-strike {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 0.8; }
         }
         .temp { font-size: 42px; font-weight: bold; margin: 10px 0; }
 
         footer { text-align: center; padding: 50px; font-size: 14px; color: #777; border-top: 1px solid #ccc; }
 
         #snakeGame:focus { outline: none; }
+        .header-icon {
+            width: 20px;
+            height: 20px;
+            color: #a0a9b5;
+            margin-right: 8px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        /* portrait for quote */
+        .portrait-wrap {
+            width: 100%;
+            aspect-ratio: 1 / 1; /* square: height equals width */
+            border-radius: 8px; /* square with slightly rounded corners */
+            overflow: hidden;
+            background: #dcdfe3;
+            position: relative;
+            margin: 0 0 10px;
+        }
+        .portrait-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            filter: grayscale(100%) contrast(95%) saturate(80%);
+        }
+        .portrait-wrap::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            /* coarse grain overlay using inline SVG noise */
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><filter id='g'><feTurbulence baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23g)' opacity='0.12' /></svg>");
+            mix-blend-mode: overlay;
+            pointer-events: none;
+        }
+
+        /* quote content width and square portrait */
+        .quote-content {
+            max-width: 420px; /* content line width — change value if you want wider/narrower quotes */
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        /* sticky nav styles */
+        .quick-nav-container.sticky {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            max-width: none;
+            margin: 0;
+            padding: 0 20px;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 999;
+        }
+
+        body.nav-sticky {
+            padding-top: 70px; /* offset for fixed nav */
+        }
+
+        .site-link {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif;
+            font-weight: 500;
+            letter-spacing: -0.3px;
+        }
+
+        /* Games grid & modal */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            padding: 12px;
+        }
+        .game-tile {
+            background: transparent;          /* hide button edge */
+            border: none;                     /* hide border/edge */
+            border-radius: 10px;
+            aspect-ratio: 1 / 1;              /* force square */
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0;
+            user-select: none;
+        }
+        .game-tile:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(34,60,80,0.06); }
+
+        /* hide any inline SVGs and use colored img icons instead */
+        .game-tile svg { display: none !important; }
+        .game-tile img { width: 64px; height: 64px; object-fit: contain; display: block; border-radius: 8px; }
+
+        /* modal overlay */
+        .game-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 1200;
+            align-items: center;
+            justify-content: center;
+        }
+        .game-modal {
+            width: 780px;
+            height: 520px;
+            max-width: 92vw;
+            max-height: 88vh;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .game-modal .modal-header {
+            display:flex; align-items:center; justify-content:space-between;
+            padding:8px 12px; border-bottom:1px solid #eee; background:#fafafa;
+        }
+        .game-modal .modal-title { font-weight:700; font-size:14px; color:#222; }
+        .game-modal .close-btn {
+            background:#eee; border:none; padding:6px 10px; border-radius:8px; cursor:pointer;
+        }
+        .game-modal .modal-body { flex:1; background:#fff; position:relative; }
+        .game-modal iframe { width:100%; height:100%; border:0; display:block; }
+        .game-modal .fallback {
+            position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:20px; text-align:center; color:#666;
+        }
+
+        /* chess modal tweaks */
+        #chessModalOverlay .game-modal { width: 760px; height: 640px; max-width: 96vw; max-height: 92vh; }
+        #chessBoard { width: 100%; max-width: 640px; margin: 10px auto; }
+        .chess-controls { display:flex; gap:8px; justify-content:center; padding:8px; }
+        .chess-status { text-align:center; font-weight:600; margin-top:6px; color:#333; }
     </style>
+    <!-- chessboard css -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
 </head>
 <body>
 
 <header>
     <div class="logo">Muybien</div>
-    <div id="date-display" style="margin-left: auto; font-weight: 500;">--</div>
-</header>
-
-<div class="search-area">
-    <div class="search-tabs">
-        <span class="tab active" onclick="setEngine('google', this)">Google</span>
-        <span class="tab" onclick="setEngine('bing', this)">Bing</span>
-        <span class="tab" onclick="setEngine('duck', this)">DuckDuckGo</span>
+    <div id="date-display" style="margin-left: auto; font-weight: 500; display:flex; gap:12px; align-items:center;">
+        <div id="date-main">--</div>
+        <div id="time-main" style="font-weight:600; font-size:13px;">--:--:--</div>
+        <div id="weekday-main" style="opacity:0.9; font-size:13px;">—</div>
+        <div id="holiday-main" style="opacity:0.9; font-size:13px; color:#ffd700;"> </div>
+        <div id="lunar-main" style="opacity:0.8; font-size:12px;"> </div>
     </div>
-    <div class="search-box-container">
-        <div class="search-wrapper">
-            <input type="text" id="main-search" class="search-input" placeholder="Search with Google..." autofocus>
-            <button class="search-btn" onclick="performSearch()">Search</button>
+    <div style="margin-left: 20px; display: flex; align-items: center; gap: 8px;">
+        <select id="language-selector" style="padding: 6px 12px; border-radius: 6px; border: 1px solid #999; background: #333; color: white; cursor: pointer; font-size: 14px;">
+            <option value="en">English</option>
+            <option value="zh">中文</option>
+            <option value="ja">日本語</option>
+            <option value="ko">한국어</option>
+            <option value="es">Español</option>
+        </select>
+    </div>
+</header>
+    <div class="search-area">
+        <div class="search-box-container">
+            <div class="search-tabs">
+                <span class="tab active" onclick="setEngine('google', this)">Google</span>
+                <span class="tab" onclick="setEngine('bing', this)">Bing</span>
+                <span class="tab" onclick="setEngine('duck', this)">Duck</span>
+            </div>
+            <div class="search-wrapper">
+                <input id="main-search" class="search-input" placeholder="" />
+                <button class="search-btn" onclick="performSearch()">Search</button>
+            </div>
         </div>
     </div>
-</div>
-
-<!-- 新增的快速导航 Bar -->
-<div class="quick-nav-container">
-    <div class="quick-nav-bar">
-        <a href="#" class="nav-item">🏠 Home</a>
-        <a href="#ai-category" class="nav-item">✨ AI Tools</a>
-        <a href="#social-category" class="nav-item">👥 Social</a>
-        <a href="#crypto-category" class="nav-item">₿ Crypto</a>
-        <a href="#shopping-category" class="nav-item">🛒 Shopping</a>
-        <a href="https://justinkwo.blogspot.com/" class="nav-item" target="_blank">📝 Blog</a>
+    <div class="quick-nav-container">
+        <div class="quick-nav-bar">
+        <a href="#ai-category" class="nav-item"><svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg> AI Tools</a>
+        <a href="#social-category" class="nav-item"><svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg> Social</a>
+        <a href="#crypto-category" class="nav-item"><svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg> Crypto</a>
+        <a href="#shopping-category" class="nav-item"><svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-0.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-0.9-2-2-2z"/></svg> Shopping</a>
+        <a href="#blog-category" class="nav-item"><svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5.04-6.71l-2.75 3.54-2.16-2.66c-.2-.25-.52-.25-.73 0l-1.97 2.36V7h5.5v5.29z"/></svg> Blogs</a>
+        <a href="#business-category" class="nav-item"><svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 7V3H2v18h20V7h-10zm6 10h-4v4h-4v-4H6v-4h4V9h4v4h4v4z"/></svg> Business</a>
     </div>
 </div>
 
 <div class="container">
     <aside>
-        <div class="weather-card">
-            <div style="font-size: 14px; opacity: 0.9;">Local Forecast</div>
-            <div id="weather-city" style="font-weight: bold; font-size: 18px;">Locating...</div>
-            <div class="temp" id="temp-display">--°C</div>
-            <div id="weather-desc" style="font-size: 14px;">Loading...</div>
-        </div>
+        <div class="weather-card" id="weather-card">
+            <div id="weather-effects"></div>
+            <div class="weather-card-content">
+                <div style="font-size: 14px; opacity: 0.9;">Local Forecast</div>
+                <div id="weather-city" style="font-weight: bold; font-size: 18px; cursor: pointer; padding: 8px; border-radius: 6px; transition: all 0.25s;" onmouseenter="this.style.background='rgba(255,255,255,0.2)'" onmouseleave="this.style.background='transparent'">Locating...</div>
+                 <div class="temp" id="temp-display">--°C</div>
+                 <div id="weather-desc" style="font-size: 14px;">Loading...</div>
+            </div>
+         </div>
 
-        <div class="card" style="padding: 15px;">
-            <div class="card-header" style="margin: -15px -15px 15px -15px; font-size: 15px;">Daily Inspiration</div>
-            <div id="quote-container" style="padding-top: 10px;">
-                <div id="quote-text" style="font-style: italic; font-size: 14px; color: #444; line-height: 1.4;">"Loading wisdom..."</div>
-                <div id="quote-author" style="text-align: right; font-size: 12px; color: #888; margin-top: 8px; font-weight: bold;"></div>
-            </div>
-        </div>
+         <div class="card" style="padding: 15px;">
+            <div class="card-header" style="margin: -15px -15px 15px -15px; font-size: 15px; display:flex; justify-content:space-between; align-items:center;">
+                <span>Daily Inspiration</span>
+             </div>
+             <div id="quote-container" style="padding-top: 10px; text-align: center;">
+                 <!-- quote content container controls line-width -->
+                 <div class="quote-content">
+                     <div class="portrait-wrap">
+                         <img id="quote-portrait"
+                              src="https://avatars.dicebear.com/api/avataaars/Unknown.png?scale=80&background=%23ffffff"
+                              alt="author portrait"
+                              onerror="this.onerror=null;this.src='https://avatars.dicebear.com/api/identicon/Unknown.png?scale=80&background=%23ffffff'">
+                     </div>
+                    <div id="quote-text" style="font-style: italic; font-size: 14px; color: #444; line-height: 1.4; min-height: 60px; display: flex; align-items: center; justify-content: center;">"Loading wisdom..."</div>
+                     <div id="quote-author" style="text-align: right; font-size: 12px; color: #888; margin-top: 8px; font-weight: bold;"></div>
+                 </div>
+             </div>
+         </div>
 
-        <div class="card" id="blogger-card" style="padding: 15px;">
-            <div class="card-header" style="margin: -15px -15px 15px -15px; font-size: 15px; display: flex; align-items: center;">
-                <img src="https://www.google.com/s2/favicons?sz=64&domain=blogger.com" style="width:20px; height:20px; margin-right:8px;">
-                Blogger Posts
-            </div>
-            <div id="blogger-content" style="padding-top: 10px;">
-                <div style="font-size: 13px; color: #888;">Fetching...</div>
-            </div>
-        </div>
+         <div class="card" id="blogger-card" style="padding: 15px;">
+            <div class="card-header" style="margin: -15px -15px 15px -15px; font-size: 15px; display: flex; align-items: center; justify-content: space-between;">
+                 <div style="display:flex; align-items:center;">
+                     <img src="https://www.google.com/s2/favicons?sz=64&domain=blogger.com" style="width:20px; height:20px; margin-right:8px;">
+                     Blogger Posts
+                 </div>
+             </div>
+             <div id="blogger-content" style="padding-top: 10px;">
+                 <div style="font-size: 13px; color: #888;">Fetching...</div>
+             </div>
+         </div>
     </aside>
 
     <main>
         <!-- AI Category -->
         <div class="card" id="ai-category">
-            <div class="card-header">✨ Artificial Intelligence</div>
+            <div class="card-header"><svg class="header-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg> Artificial Intelligence</div>
             <div class="link-grid">
                 <a href="https://chatgpt.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=openai.com">ChatGPT</a>
                 <a href="https://claude.ai" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=anthropic.com">Claude AI</a>
                 <a href="https://gemini.google.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=google.com">Gemini</a>
                 <a href="https://www.perplexity.ai" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=perplexity.ai">Perplexity</a>
-                <a href="https://deepseek.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=deepseek.com">DeepSeek</a>
-                <a href="https://huggingface.co" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=huggingface.co">HuggingFace</a>
+                <a href="https://www.blackbox.ai" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=blackbox.ai">Blackbox</a>
+                <a href="https://copilot.microsoft.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=microsoft.com">Copilot</a>
+                <a href="https://www.cohere.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=cohere.com">Cohere</a>
+                <a href="https://mistral.ai" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=mistral.ai">Mistral</a>
             </div>
         </div>
 
         <!-- Social Category -->
         <div class="card" id="social-category">
-            <div class="card-header">👥 Social Networks & Community</div>
+            <div class="card-header"><svg class="header-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg> Social Networks & Community</div>
             <div class="link-grid">
                 <a href="https://www.facebook.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=facebook.com">Facebook</a>
                 <a href="https://www.twitter.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=twitter.com">Twitter (X)</a>
@@ -308,45 +650,80 @@
                 <a href="https://www.yahoo.co.jp" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=yahoo.co.jp">Yahoo! JP</a>
                 <a href="https://www.dcinside.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=dcinside.com">DC Inside</a>
                 <a href="https://www.2ch.sc" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=2ch.sc">2channel</a>
-                <a href="https://www.tumblr.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=tumblr.com">Tumblr</a>
-            </div>
+                <a href="https://www.linkedin.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=linkedin.com">LinkedIn</a>
+                <a href="https://www.discord.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=discord.com">Discord</a>
+             </div>
         </div>
 
         <!-- Crypto Category -->
         <div class="card" id="crypto-category">
-            <div class="card-header">₿ Crypto & Web3 Ecosystem</div>
+            <div class="card-header"><svg class="header-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg> Crypto & Web3 Ecosystem</div>
             <div class="link-grid">
                 <a href="https://www.binance.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=binance.com">Binance</a>
                 <a href="https://www.coinbase.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=coinbase.com">Coinbase</a>
                 <a href="https://coinmarketcap.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=coinmarketcap.com">CoinMarketCap</a>
                 <a href="https://www.upbit.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=upbit.com">Upbit (KR)</a>
-                <a href="https://bitflyer.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=bitflyer.com">bitFlyer (JP)</a>
-                <a href="https://metamask.io" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=metamask.io">MetaMask</a>
-            </div>
+                <a href="https://www.kraken.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=kraken.com">Kraken</a>
+                <a href="https://www.bybit.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=bybit.com">Bybit</a>
+                <a href="https://www.okx.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=okx.com">OKX</a>
+                <a href="https://etherscan.io" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=etherscan.io">Etherscan</a>
+             </div>
         </div>
 
         <!-- Shopping Category -->
         <div class="card" id="shopping-category">
-            <div class="card-header">🛒 Global Shopping & Trade</div>
+            <div class="card-header"><svg class="header-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-0.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-0.9-2-2-2z"/></svg> Global Shopping & Trade</div>
             <div class="link-grid">
                 <a href="https://www.amazon.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=amazon.com">Amazon</a>
                 <a href="https://www.ebay.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=ebay.com">eBay</a>
                 <a href="https://www.rakuten.co.jp" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=rakuten.co.jp">Rakuten JP</a>
                 <a href="https://www.coupang.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=coupang.com">Coupang KR</a>
-                <a href="https://www.gmarket.co.kr" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=gmarket.co.kr">Gmarket KR</a>
-                <a href="https://www.kakaku.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=kakaku.com">Kakaku JP</a>
-            </div>
+                <a href="https://www.aliexpress.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=aliexpress.com">AliExpress</a>
+                <a href="https://www.etsy.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=etsy.com">Etsy</a>
+                <a href="https://www.shopee.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=shopee.com">Shopee</a>
+                <a href="https://www.lazada.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=lazada.com">Lazada</a>
+             </div>
+        </div>
+
+        <!-- Blog Category -->
+        <div class="card" id="blog-category">
+            <div class="card-header"><svg class="header-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5.04-6.71l-2.75 3.54-2.16-2.66c-.2-.25-.52-.25-.73 0l-1.97 2.36V7h5.5v5.29z"/></svg> Blogs & Reading</div>
+            <div class="link-grid">
+                <a href="https://medium.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=medium.com">Medium</a>
+                <a href="https://www.blogger.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=blogger.com">Blogger</a>
+                <a href="https://www.wordpress.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=wordpress.com">WordPress</a>
+                <a href="https://note.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=note.com">Note (JP)</a>
+                <a href="https://hashnode.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=hashnode.com">Hashnode</a>
+                <a href="https://dev.to" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=dev.to">Dev.to</a>
+                <a href="https://substack.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=substack.com">Substack</a>
+                <a href="https://ghost.org" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=ghost.org">Ghost</a>
+             </div>
+        </div>
+
+        <!-- Business & Consulting Category -->
+        <div class="card" id="business-category">
+            <div class="card-header"><svg class="header-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 7V3H2v18h20V7h-10zm6 10h-4v4h-4v-4H6v-4h4V9h4v4h4v4z"/></svg> Business & Consulting</div>
+            <div class="link-grid">
+                <a href="https://www.mckinsey.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=mckinsey.com">McKinsey</a>
+                <a href="https://www.bcg.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=bcg.com">Boston Consulting</a>
+                <a href="https://www.bain.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=bain.com">Bain & Company</a>
+                <a href="https://www.accenture.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=accenture.com">Accenture</a>
+                <a href="https://www.pwc.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=pwc.com">PwC</a>
+                <a href="https://www.forbes.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=forbes.com">Forbes</a>
+                <a href="https://hbr.org" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=hbr.org">HBR</a>
+                <a href="https://www.bloomberg.com" class="site-link"><img src="https://www.google.com/s2/favicons?sz=64&domain=bloomberg.com">Bloomberg</a>
+             </div>
         </div>
     </main>
 
     <aside>
-        <div class="card" style="height: 400px;">
+        <div class="card" style="height: auto;">
             <div class="card-header">Live Markets</div>
             <div class="tradingview-widget-container">
                 <div class="tradingview-widget-container__widget"></div>
                 <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
                 {
-                  "colorTheme": "light", "dateRange": "12M", "showChart": false, "locale": "en", "width": "100%", "height": "100%",
+                  "colorTheme": "light", "dateRange": "12M", "showChart": false, "locale": "en", "width": "100%", "height": "300",
                   "isTransparent": true, "showSymbolLogo": true,
                   "tabs": [
                     { "title": "Markets", "symbols": [
@@ -359,17 +736,91 @@
             </div>
         </div>
 
-        <div class="card" id="game-card" style="padding: 15px; text-align: center;">
-            <div class="card-header" style="margin: -15px -15px 15px -15px; font-size: 15px;">🕹️ Snake</div>
-            <div style="margin-top: 10px; background: #222; border-radius: 8px; position: relative;">
-                <canvas id="snakeGame" width="200" height="200"></canvas>
-                <div id="game-over" style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); color:white; background:rgba(0,0,0,0.8); width:100%; padding:10px 0;">
-                    OVER<br><button onclick="resetGame()" style="cursor:pointer;">Restart</button>
+        <!-- Games Grid -->
+        <div class="card" id="games-card" style="padding: 0;">
+            <div class="card-header" style="font-size: 15px; display:flex; align-items:center;">🕹️ Games</div>
+            <div class="games-grid" style="padding:16px;">
+                <div class="game-tile" data-internal="chess" data-title="International Chess" aria-label="International Chess">
+                    <img src="https://www.google.com/s2/favicons?sz=128&domain=chess.com" alt="chess">
+                </div>
+                <div class="game-tile" data-src="https://www.playok.com/en/xiangqi/" data-title="Chinese Xiangqi" aria-label="Chinese Xiangqi">
+                    <img src="https://www.google.com/s2/favicons?sz=128&domain=playok.com" alt="playok">
+                </div>
+                <div class="game-tile" data-src="https://www.websudoku.com/" data-title="Sudoku" aria-label="Sudoku">
+                    <img src="https://www.google.com/s2/favicons?sz=128&domain=websudoku.com" alt="websudoku">
+                </div>
+                <div class="game-tile" data-src="about:blank" data-title="Minesweeper" aria-label="Minesweeper">
+                    <img src="https://www.google.com/s2/favicons?sz=128&domain=minesweeperonline.com" alt="minesweeper">
+                </div>
+                <div class="game-tile" data-src="about:blank" data-title="2048" aria-label="2048">
+                    <img src="https://www.google.com/s2/favicons?sz=128&domain=play2048.co" alt="2048">
+                </div>
+                <div class="game-tile" data-src="about:blank" data-title="Tetris" aria-label="Tetris">
+                    <img src="https://www.google.com/s2/favicons?sz=128&domain=tetris.com" alt="tetris">
+                </div>
+                <div class="game-tile" data-src="about:blank" data-title="Puzzle" aria-label="Puzzle">
+                    <img src="https://www.google.com/s2/favicons?sz=128&domain=jigsawplanet.com" alt="puzzle">
+                </div>
+                <div class="game-tile" data-src="about:blank" data-title="Card Game" aria-label="Card Game">
+                    <img src="https://www.google.com/s2/favicons?sz=128&domain=cardgames.io" alt="cards">
+                </div>
+                <div class="game-tile" data-src="about:blank" data-title="Memory" aria-label="Memory">
+                    <img src="https://www.google.com/s2/favicons?sz=128&domain=lumosity.com" alt="memory">
                 </div>
             </div>
-            <div style="font-size: 12px; margin-top: 5px;">Score: <span id="game-score">0</span></div>
+        </div>
+
+        <!-- Game modal -->
+        <div class="game-modal-overlay" id="gameModalOverlay" aria-hidden="true">
+            <div class="game-modal" role="dialog" aria-modal="true" id="gameModal">
+                <div class="modal-header">
+                    <div class="modal-title" id="gameModalTitle">Game</div>
+                    <button class="close-btn" id="gameModalClose">✕</button>
+                </div>
+                <div class="modal-body">
+                    <iframe id="gameIframe" src="about:blank" title="game frame"></iframe>
+                    <div class="fallback" id="gameFallback" style="display:none;">Unable to load the game. It may block embedding. Open in a new tab: <a id="gameOpenLink" href="#" target="_blank" rel="noopener">Open</a></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chess modal (hidden by default) -->
+        <div class="game-modal-overlay" id="chessModalOverlay" aria-hidden="true" style="display:none">
+            <div class="game-modal" role="dialog" aria-modal="true" id="chessModal">
+                <div class="modal-header">
+                    <div class="modal-title" id="chessModalTitle">International Chess</div>
+                    <div style="display:flex; gap:8px;">
+                        <button class="close-btn" id="chessModalClose">✕</button>
+                    </div>
+                </div>
+                <div class="modal-body" style="display:flex; flex-direction:column; align-items:stretch;">
+                    <div id="chessBoard"></div>
+                    <div class="chess-controls">
+                        <button id="chessNew">New Game</button>
+                        <button id="chessUndo">Undo</button>
+                        <a id="chessOpenExternal" href="#" target="_blank" rel="noopener" style="align-self:center;">Open external</a>
+                    </div>
+                    <div class="chess-status" id="chessStatus">Ready</div>
+                </div>
+            </div>
         </div>
     </aside>
+</div>
+
+<!-- Game Modal (hidden by default) -->
+<div class="game-modal-overlay" id="game-modal-overlay">
+    <div class="game-modal" id="game-modal">
+        <div class="modal-header">
+            <div class="modal-title">Game</div>
+            <button class="close-btn" id="close-modal">✖️</button>
+        </div>
+        <div class="modal-body">
+            <!-- Iframe for game content -->
+            <iframe id="game-iframe" src="" frameborder="0" allowfullscreen></iframe>
+            <!-- Fallback content while game is loading -->
+            <div class="fallback">Loading game...</div>
+        </div>
+    </div>
 </div>
 
 <footer>
@@ -377,6 +828,684 @@
 </footer>
 
 <script>
+    // --- 多语言支持 ---
+    const translations = {
+        en: {
+            'search_google': 'Search with Google...',
+            'search_bing': 'Search with Bing...',
+            'search_duck': 'Search with DuckDuckGo...',
+            'google': 'Google',
+            'bing': 'Bing',
+            'duck': 'DuckDuckGo',
+            'search_btn': 'Search',
+            'home': 'Home',
+            'ai_tools': 'AI Tools',
+            'social': 'Social',
+            'crypto': 'Crypto',
+            'shopping': 'Shopping',
+            'blogs': 'Blogs',
+            'business': 'Business',
+            'local_forecast': 'Local Forecast',
+            'daily_inspiration': 'Daily Inspiration',
+            'blogger_posts': 'Blogger Posts',
+            'fetching': 'Fetching...',
+            'no_posts': 'No posts available',
+            'unable_load_posts': 'Unable to load posts',
+            'ai_category': 'Artificial Intelligence',
+            'social_category': 'Social Networks & Community',
+            'crypto_category': 'Crypto & Web3 Ecosystem',
+            'shopping_category': 'Global Shopping & Trade',
+            'blog_category': 'Blogs & Reading',
+            'business_category': 'Business & Consulting',
+            'live_markets': 'Live Markets',
+            'games': 'Games',
+            'enter_city': 'Enter City Name:',
+            'city_busy': 'Busy',
+            'weather_unavailable': 'Unavailable',
+            'weather_error': 'Error',
+            'clear_sky': 'Clear sky',
+            'mainly_clear': 'Mainly clear',
+            'partly_cloudy': 'Partly cloudy',
+            'overcast': 'Overcast',
+            'fog': 'Fog',
+            'depositing_rime_fog': 'Depositing rime fog',
+            'light_drizzle': 'Light drizzle',
+            'moderate_drizzle': 'Moderate drizzle',
+            'dense_drizzle': 'Dense drizzle',
+            'light_freezing_drizzle': 'Light freezing drizzle',
+            'dense_freezing_drizzle': 'Dense freezing drizzle',
+            'slight_rain': 'Slight rain',
+            'moderate_rain': 'Moderate rain',
+            'heavy_rain': 'Heavy rain',
+            'light_freezing_rain': 'Light freezing rain',
+            'heavy_freezing_rain': 'Heavy freezing rain',
+            'slight_snow': 'Slight snow',
+            'moderate_snow': 'Moderate snow',
+            'heavy_snow': 'Heavy snow',
+            'snow_grains': 'Snow grains',
+            'slight_showers': 'Slight showers',
+            'moderate_showers': 'Moderate showers',
+            'violent_showers': 'Violent showers',
+            'slight_snow_showers': 'Slight snow showers',
+            'heavy_snow_showers': 'Heavy snow showers',
+            'thunderstorm': 'Thunderstorm',
+            'thunderstorm_slight_hail': 'Thunderstorm with slight hail',
+            'thunderstorm_heavy_hail': 'Thunderstorm with heavy hail',
+            'unknown': 'Unknown',
+            'unable_load_quote': 'Unable to load quote',
+            'loading_wisdom': 'Loading wisdom...',
+            'international_chess': 'International Chess',
+            'chinese_xiangqi': 'Chinese Xiangqi',
+            'sudoku': 'Sudoku',
+            'minesweeper': 'Minesweeper',
+            'puzzle': 'Puzzle',
+            'card_game': 'Card Game',
+            'memory': 'Memory',
+            'game': 'Game',
+            'checkmate': 'Checkmate',
+            'draw': 'Draw',
+            'white': 'White',
+            'black': 'Black',
+            'check': 'Check',
+            'new_game': 'New Game',
+            'undo': 'Undo',
+            'open_external': 'Open external',
+            'ready': 'Ready',
+            'locating': 'Locating...',
+            'loading': 'Loading...',
+            'unable_load_game': 'Unable to load the game. It may block embedding.',
+            'open_in_new_tab': 'Open in a new tab',
+            'open': 'Open',
+            'loading_game': 'Loading game...',
+            'press_keys': 'Press Keys',
+            'holiday_today_prefix': 'Holiday:',
+            'no_holiday_today': 'No holiday today',
+            'lunar_unavailable': 'Lunar date unavailable',
+            'copyright': '© 2015 Muybien Personal Portal.'
+        },
+        zh: {
+            'search_google': '用Google搜索...',
+            'search_bing': '用Bing搜索...',
+            'search_duck': '用DuckDuckGo搜索...',
+            'google': 'Google',
+            'bing': 'Bing',
+            'duck': 'DuckDuckGo',
+            'search_btn': '搜索',
+            'home': '主页',
+            'ai_tools': 'AI工具',
+            'social': '社交',
+            'crypto': '加密货币',
+            'shopping': '购物',
+            'blogs': '博客',
+            'business': '商业',
+            'local_forecast': '本地天气',
+            'daily_inspiration': '每日灵感',
+            'blogger_posts': '博客文章',
+            'fetching': '加载中...',
+            'no_posts': '没有文章',
+            'unable_load_posts': '无法加载文章',
+            'ai_category': '人工智能',
+            'social_category': '社交网络与社区',
+            'crypto_category': '加密货币与Web3生态',
+            'shopping_category': '全球购物与贸易',
+            'blog_category': '博客与阅读',
+            'business_category': '商业与咨询',
+            'live_markets': '实时行情',
+            'games': '游戏',
+            'enter_city': '输入城市名称:',
+            'city_busy': '繁忙',
+            'weather_unavailable': '不可用',
+            'weather_error': '错误',
+            'clear_sky': '晴朗',
+            'mainly_clear': '主要晴朗',
+            'partly_cloudy': '部分多云',
+            'overcast': '阴天',
+            'fog': '有雾',
+            'depositing_rime_fog': '沉积霜冻雾',
+            'light_drizzle': '小毛毛雨',
+            'moderate_drizzle': '中等毛毛雨',
+            'dense_drizzle': '密集毛毛雨',
+            'light_freezing_drizzle': '小冻毛毛雨',
+            'dense_freezing_drizzle': '密集冻毛毛雨',
+            'slight_rain': '小雨',
+            'moderate_rain': '中雨',
+            'heavy_rain': '大雨',
+            'light_freezing_rain': '小冻雨',
+            'heavy_freezing_rain': '大冻雨',
+            'slight_snow': '小雪',
+            'moderate_snow': '中雪',
+            'heavy_snow': '大雪',
+            'snow_grains': '雪粒',
+            'slight_showers': '小阵雨',
+            'moderate_showers': '中等阵雨',
+            'violent_showers': '强阵雨',
+            'slight_snow_showers': '小阵雪',
+            'heavy_snow_showers': '大阵雪',
+            'thunderstorm': '雷暴',
+            'thunderstorm_slight_hail': '雷暴伴小冰雹',
+            'thunderstorm_heavy_hail': '雷暴伴大冰雹',
+            'unknown': '未知',
+            'unable_load_quote': '无法加载引言',
+            'loading_wisdom': '加载智慧中...',
+            'international_chess': '国际象棋',
+            'chinese_xiangqi': '中国象棋',
+            'sudoku': '数独',
+            'minesweeper': '扫雷',
+            'puzzle': '拼图',
+            'card_game': '纸牌游戏',
+            'memory': '记忆',
+            'game': '游戏',
+            'checkmate': '将死',
+            'draw': '平局',
+            'white': '白方',
+            'black': '黑方',
+            'check': '将军',
+            'new_game': '新游戏',
+            'undo': '撤销',
+            'open_external': '在外部打开',
+            'ready': '就绪',
+            'locating': '定位中...',
+            'loading': '加载中...',
+            'unable_load_game': '无法加载游戏。可能会阻止嵌入。',
+            'open_in_new_tab': '在新标签页打开',
+            'open': '打开',
+            'loading_game': '正在加载游戏...',
+            'press_keys': '按键开始',
+            'holiday_today_prefix': '节日：',
+            'no_holiday_today': '今日无节假日',
+            'lunar_unavailable': '无法显示农历',
+            'copyright': '© 2015 Muybien 个人门户。'
+        },
+        ja: {
+            'search_google': 'Googleで検索...',
+            'search_bing': 'Bingで検索...',
+            'search_duck': 'DuckDuckGoで検索...',
+            'google': 'Google',
+            'bing': 'Bing',
+            'duck': 'DuckDuckGo',
+            'search_btn': '検索',
+            'home': 'ホーム',
+            'ai_tools': 'AIツール',
+            'social': 'ソーシャル',
+            'crypto': '暗号資産',
+            'shopping': 'ショッピング',
+            'blogs': 'ブログ',
+            'business': 'ビジネス',
+            'local_forecast': 'ローカル天気予報',
+            'daily_inspiration': '毎日のインスピレーション',
+            'blogger_posts': 'ブロガーの投稿',
+            'fetching': '読み込み中...',
+            'no_posts': '投稿がありません',
+            'unable_load_posts': '投稿を読み込めません',
+            'ai_category': '人工知能',
+            'social_category': 'ソーシャルネットワーク & コミュニティ',
+            'crypto_category': '暗号資産 & Web3 エコシステム',
+            'shopping_category': 'グローバルショッピング & 貿易',
+            'blog_category': 'ブログ & 読書',
+            'business_category': 'ビジネス & コンサルティング',
+            'live_markets': 'ライブマーケット',
+            'games': 'ゲーム',
+            'enter_city': 'シティ名を入力:',
+            'city_busy': '混雑中',
+            'weather_unavailable': '利用できません',
+            'weather_error': 'エラー',
+            'clear_sky': '晴天',
+            'mainly_clear': '主に晴天',
+            'partly_cloudy': '曇りがち',
+            'overcast': '曇り',
+            'fog': '霧',
+            'depositing_rime_fog': 'リム霧の堆積',
+            'light_drizzle': '小雨',
+            'moderate_drizzle': '霧雨（中程度）',
+            'dense_drizzle': '霧雨（濃い）',
+            'light_freezing_drizzle': '凍結小雨',
+            'dense_freezing_drizzle': '凍結霧雨（濃い）',
+            'slight_rain': '弱い雨',
+            'moderate_rain': '中程度の雨',
+            'heavy_rain': '大雨',
+            'light_freezing_rain': '弱い凍結雨',
+            'heavy_freezing_rain': '強い凍結雨',
+            'slight_snow': '弱い雪',
+            'moderate_snow': '中程度の雪',
+            'heavy_snow': '大雪',
+            'snow_grains': '粉雪',
+            'slight_showers': '弱いシャワー',
+            'moderate_showers': '中程度のシャワー',
+            'violent_showers': '激しいシャワー',
+            'slight_snow_showers': '弱い雪のシャワー',
+            'heavy_snow_showers': '強い雪のシャワー',
+            'thunderstorm': '雷嵐',
+            'thunderstorm_slight_hail': '雷嵐と小ひょう',
+            'thunderstorm_heavy_hail': '雷嵐と大ひょう',
+            'unknown': '不明',
+            'unable_load_quote': '引用を読み込めません',
+            'loading_wisdom': '知恵を読み込み中...',
+            'international_chess': '国際チェス',
+            'chinese_xiangqi': '中国象棋',
+            'sudoku': '数独',
+            'minesweeper': 'マインスイーパー',
+            'puzzle': 'パズル',
+            'card_game': 'カードゲーム',
+            'memory': 'メモリー',
+            'game': 'ゲーム',
+            'checkmate': 'チェックメイト',
+            'draw': '引き分け',
+            'white': 'ホワイト',
+            'black': 'ブラック',
+            'check': 'チェック',
+            'new_game': '新しいゲーム',
+            'undo': '戻す',
+            'open_external': '外部で開く',
+            'ready': '準備完了',
+            'locating': '現在地を取得中...',
+            'loading': '読み込み中...',
+            'unable_load_game': 'ゲームを読み込めません。埋め込みをブロックしている可能性があります。',
+            'open_in_new_tab': '新しいタブで開く',
+            'open': '開く',
+            'loading_game': 'ゲームを読み込み中...',
+            'press_keys': 'キーを押してください',
+            'holiday_today_prefix': '祝日：',
+            'no_holiday_today': '今日は祝日ではありません',
+            'lunar_unavailable': '旧暦を表示できません',
+            'copyright': '© 2015 Muybien パーソナルポータル。'
+        },
+        ko: {
+            'search_google': 'Google로 검색...',
+            'search_bing': 'Bing으로 검색...',
+            'search_duck': 'DuckDuckGo로 검색...',
+            'google': 'Google',
+            'bing': 'Bing',
+            'duck': 'DuckDuckGo',
+            'search_btn': '검색',
+            'home': '홈',
+            'ai_tools': 'AI 도구',
+            'social': '소셜',
+            'crypto': '암호화폐',
+            'shopping': '쇼핑',
+            'blogs': '블로그',
+            'business': '비즈니스',
+            'local_forecast': '지역 날씨',
+            'daily_inspiration': '매일의 영감',
+            'blogger_posts': '블로거 포스트',
+            'fetching': '로드 중...',
+            'no_posts': '게시물 없음',
+            'unable_load_posts': '게시물을 로드할 수 없습니다',
+            'ai_category': '인공지능',
+            'social_category': '소셜 네트워크 & 커뮤니티',
+            'crypto_category': '암호화폐 & Web3 생태계',
+            'shopping_category': '글로벌 쇼핑 & 무역',
+            'blog_category': '블로그 & 읽기',
+            'business_category': '비즈니스 & 컨설팅',
+            'live_markets': '라이브 시장',
+            'games': '게임',
+            'enter_city': '도시 이름 입력:',
+            'city_busy': '바쁜',
+            'weather_unavailable': '사용할 수 없음',
+            'weather_error': '오류',
+            'clear_sky': '맑음',
+            'mainly_clear': '주로 맑음',
+            'partly_cloudy': '부분적으로 흐림',
+            'overcast': '흐림',
+            'fog': '안개',
+            'depositing_rime_fog': '서리 안개 침전',
+            'light_drizzle': '가벼운 이슬',
+            'moderate_drizzle': '중간 이슬',
+            'dense_drizzle': '짙은 이슬',
+            'light_freezing_drizzle': '가벼운 빙결 이슬',
+            'dense_freezing_drizzle': '짙은 빙결 이슬',
+            'slight_rain': '약한 비',
+            'moderate_rain': '보통 비',
+            'heavy_rain': '폭우',
+            'light_freezing_rain': '약한 빙결우',
+            'heavy_freezing_rain': '강한 빙결우',
+            'slight_snow': '약한 눈',
+            'moderate_snow': '보통 눈',
+            'heavy_snow': '폭설',
+            'snow_grains': '눈 입자',
+            'slight_showers': '약한 소나기',
+            'moderate_showers': '보통 소나기',
+            'violent_showers': '폭우',
+            'slight_snow_showers': '약한 눈 소나기',
+            'heavy_snow_showers': '강한 눈 소나기',
+            'thunderstorm': '천둥폭풍',
+            'thunderstorm_slight_hail': '약한 우박이 있는 천둥폭풍',
+            'thunderstorm_heavy_hail': '강한 우박이 있는 천둥폭풍',
+            'unknown': '알 수 없음',
+            'unable_load_quote': '인용을 로드할 수 없습니다',
+            'loading_wisdom': '지혜 로드 중...',
+            'international_chess': '국제 체스',
+            'chinese_xiangqi': '중국 상징',
+            'sudoku': '스도쿠',
+            'minesweeper': '지뢰찾기',
+            'puzzle': '퍼즐',
+            'card_game': '카드 게임',
+            'memory': '메모리',
+            'game': '게임',
+            'checkmate': '체크메이트',
+            'draw': '비김',
+            'white': '백',
+            'black': '흑',
+            'check': '체크',
+            'new_game': '새 게임',
+            'undo': '실행 취소',
+            'open_external': '외부에서 열기',
+            'ready': '준비됨',
+            'locating': '위치 확인 중...',
+            'loading': '로드 중...',
+            'unable_load_game': '게임을 로드할 수 없습니다. 임베딩을 차단할 수 있습니다.',
+            'open_in_new_tab': '새 탭에서 열기',
+            'open': '열기',
+            'loading_game': '게임 로드 중...',
+            'press_keys': '키를 누르세요',
+            'holiday_today_prefix': '공휴일:',
+            'no_holiday_today': '오늘 공휴일 없음',
+            'lunar_unavailable': '음력 날짜를 표시할 수 없습니다',
+            'copyright': '© 2015 Muybien 개인 포털.'
+        },
+        es: {
+            'search_google': 'Buscar con Google...',
+            'search_bing': 'Buscar con Bing...',
+            'search_duck': 'Buscar con DuckDuckGo...',
+            'google': 'Google',
+            'bing': 'Bing',
+            'duck': 'DuckDuckGo',
+            'search_btn': 'Buscar',
+            'home': 'Inicio',
+            'ai_tools': 'Herramientas IA',
+            'social': 'Social',
+            'crypto': 'Criptos',
+            'shopping': 'Compras',
+            'blogs': 'Blogs',
+            'business': 'Negocios',
+            'local_forecast': 'Pronóstico Local',
+            'daily_inspiration': 'Inspiración Diaria',
+            'blogger_posts': 'Publicaciones de Blogger',
+            'fetching': 'Cargando...',
+            'no_posts': 'Sin publicaciones',
+            'unable_load_posts': 'No se pueden cargar publicaciones',
+            'ai_category': 'Inteligencia Artificial',
+            'social_category': 'Redes Sociales & Comunidad',
+            'crypto_category': 'Criptos & Ecosistema Web3',
+            'shopping_category': 'Compras Globales & Comercio',
+            'blog_category': 'Blogs & Lecturas',
+            'business_category': 'Negocios & Consultoría',
+            'live_markets': 'Mercados en Vivo',
+            'games': 'Juegos',
+            'enter_city': 'Ingrese nombre de ciudad:',
+            'city_busy': 'Ocupado',
+            'weather_unavailable': 'No disponible',
+            'weather_error': 'Error',
+            'clear_sky': 'Cielo despejado',
+            'mainly_clear': 'Principalmente despejado',
+            'partly_cloudy': 'Parcialmente nublado',
+            'overcast': 'Nublado',
+            'fog': 'Neblina',
+            'depositing_rime_fog': 'Depósito de escarcha',
+            'light_drizzle': 'Llovizna ligera',
+            'moderate_drizzle': 'Llovizna moderada',
+            'dense_drizzle': 'Llovizna densa',
+            'light_freezing_drizzle': 'Llovizna congelante ligera',
+            'dense_freezing_drizzle': 'Llovizna congelante densa',
+            'slight_rain': 'Lluvia leve',
+            'moderate_rain': 'Lluvia moderada',
+            'heavy_rain': 'Lluvia fuerte',
+            'light_freezing_rain': 'Lluvia congelante ligera',
+            'heavy_freezing_rain': 'Lluvia congelante fuerte',
+            'slight_snow': 'Nieve leve',
+            'moderate_snow': 'Nieve moderada',
+            'heavy_snow': 'Nevada fuerte',
+            'snow_grains': 'Gránulos de nieve',
+            'slight_showers': 'Chaparrones leves',
+            'moderate_showers': 'Chaparrones moderados',
+            'violent_showers': 'Chaparrones violentos',
+            'slight_snow_showers': 'Chaparrones de nieve leve',
+            'heavy_snow_showers': 'Chaparrones de nieve fuerte',
+            'thunderstorm': 'Tormenta eléctrica',
+            'thunderstorm_slight_hail': 'Tormenta eléctrica con granizo leve',
+            'thunderstorm_heavy_hail': 'Tormenta eléctrica con granizo fuerte',
+            'unknown': 'Desconocido',
+            'unable_load_quote': 'No se puede cargar la cita',
+            'loading_wisdom': 'Cargando sabiduría...',
+            'international_chess': 'Ajedrez Internacional',
+            'chinese_xiangqi': 'Xiangqi Chino',
+            'sudoku': 'Sudoku',
+            'minesweeper': 'Buscaminas',
+            'puzzle': 'Puzzle',
+            'card_game': 'Juego de Cartas',
+            'memory': 'Memoria',
+            'game': 'Juego',
+            'checkmate': 'Jaque Mate',
+            'draw': 'Tablas',
+            'white': 'Blanco',
+            'black': 'Negro',
+            'check': 'Jaque',
+            'new_game': 'Nuevo Juego',
+            'undo': 'Deshacer',
+            'open_external': 'Abrir externo',
+            'ready': 'Listo',
+            'locating': 'Localizando...',
+            'loading': 'Cargando...',
+            'unable_load_game': 'No se puede cargar el juego. Puede bloquear la incrustación.',
+            'open_in_new_tab': 'Abrir en una pestaña nueva',
+            'open': 'Abrir',
+            'loading_game': 'Cargando juego...',
+            'press_keys': 'Presione teclas',
+            'holiday_today_prefix': 'Festivo:',
+            'no_holiday_today': 'No hay festivos hoy',
+            'lunar_unavailable': 'Fecha lunar no disponible',
+            'copyright': '© 2015 Portal Personal Muybien.'
+        }
+    };
+
+    let currentLanguage = localStorage.getItem('selectedLanguage') || 'en';
+
+    const dateLocaleMap = { en: 'en-US', zh: 'zh-CN', ja: 'ja-JP', ko: 'ko-KR', es: 'es-ES' };
+
+    // store last fetched weather code so we can re-translate on language change
+    let lastWeatherCode = null;
+    let lastHolidayName = null;
+
+    function t(key) {
+        return translations[currentLanguage][key] || translations['en'][key] || key;
+    }
+
+    function changeLanguage(lang) {
+        currentLanguage = lang;
+        localStorage.setItem('selectedLanguage', lang);
+        updateUIText();
+    }
+
+    function updateUIText() {
+        // 更新搜索标签
+        document.querySelectorAll('.tab')[0].textContent = t('google');
+        document.querySelectorAll('.tab')[1].textContent = t('bing');
+        document.querySelectorAll('.tab')[2].textContent = t('duck');
+
+        // 更新搜索输入框占位符
+        document.getElementById('main-search').placeholder = t('search_' + currentEngine);
+
+        // 更新搜索按钮
+        document.querySelector('.search-btn').textContent = t('search_btn');
+
+        // 更新导航栏
+        const navItems = document.querySelectorAll('.nav-item');
+        const navTexts = [t('home'), t('ai_tools'), t('social'), t('crypto'), t('shopping'), t('blogs'), t('business')];
+        navItems.forEach((item, i) => {
+            if (i < navTexts.length) {
+                const svg = item.querySelector('svg');
+                item.innerHTML = svg ? svg.outerHTML : '';
+                const textNode = document.createTextNode(' ' + navTexts[i]);
+                item.appendChild(textNode);
+            }
+        });
+
+        // 更新分类标题
+        const headers = document.querySelectorAll('.card-header');
+        const categoryNames = [t('ai_category'), t('social_category'), t('crypto_category'), t('shopping_category'), t('blog_category'), t('business_category')];
+        
+        // Find headers that contain SVG icons
+        let headerIndex = 0;
+        headers.forEach((header) => {
+            if (header.querySelector('svg') && headerIndex < categoryNames.length) {
+                const svg = header.querySelector('svg');
+                header.innerHTML = svg.outerHTML + ' ' + categoryNames[headerIndex];
+                headerIndex++;
+            }
+        });
+
+        // 更新侧边栏标题和内容
+        const asides = document.querySelectorAll('aside');
+        
+        // 更新weather card标签
+        const weatherCardLabel = document.querySelector('.weather-card > div:first-child');
+        if (weatherCardLabel) {
+            weatherCardLabel.textContent = t('local_forecast');
+        }
+
+        // 更新Daily Inspiration
+        const dailyCard = asides[0].querySelector('.card');
+        if (dailyCard) {
+            const dailyHeader = dailyCard.querySelector('.card-header span');
+            if (dailyHeader) dailyHeader.textContent = t('daily_inspiration');
+        }
+
+        // 更新Blogger Posts
+        const bloggerCard = document.getElementById('blogger-card');
+        if (bloggerCard) {
+            const headerImg = bloggerCard.querySelector('img');
+            const headerContent = headerImg ? headerImg.outerHTML + ' ' : '';
+            bloggerCard.querySelector('.card-header').innerHTML = headerContent + t('blogger_posts');
+        }
+
+        // 更新Live Markets和Games（右侧边栏）
+        if (asides.length > 1) {
+            const rightCards = asides[1].querySelectorAll('.card');
+            if (rightCards.length > 0) {
+                rightCards[0].querySelector('.card-header').textContent = t('live_markets');
+            }
+            if (rightCards.length > 1) {
+                rightCards[1].querySelector('.card-header').textContent = '🕹️ ' + t('games');
+            }
+        }
+
+        // 额外可翻译的静态文本（天气、引言、游戏回退与链接）
+        const weatherCity = document.getElementById('weather-city');
+        if (weatherCity) {
+            const txt = weatherCity.innerText.trim();
+            if (!txt || /locat/i.test(txt) || txt.length < 2) weatherCity.innerText = t('locating');
+        }
+        const weatherDesc = document.getElementById('weather-desc');
+        if (weatherDesc) {
+            const d = weatherDesc.innerText.trim();
+            if (!d || /load/i.test(d)) weatherDesc.innerText = t('loading');
+        }
+
+        // 引言初始文本（会被异步更新）
+        const quoteText = document.getElementById('quote-text');
+        if (quoteText) quoteText.innerText = '"' + t('loading_wisdom') + '"';
+
+        // 游戏回退文案与链接
+        const gameFallback = document.getElementById('gameFallback');
+        if (gameFallback) {
+            const openLabel = '<a id="gameOpenLink" href="#" target="_blank" rel="noopener">' + t('open') + '</a>';
+            gameFallback.innerHTML = t('unable_load_game') + ' ' + t('open_in_new_tab') + ': ' + openLabel;
+        }
+        const gameModalFallbacks = document.querySelectorAll('#game-modal .fallback');
+        gameModalFallbacks.forEach(f => { f.innerText = t('loading_game'); });
+        const gameOpenLink = document.getElementById('gameOpenLink');
+        if (gameOpenLink) gameOpenLink.textContent = t('open');
+
+        // chess external link label
+        const chessOpenExternal = document.getElementById('chessOpenExternal');
+        if (chessOpenExternal) chessOpenExternal.textContent = t('open_external');
+
+        // 更新日期/时间/周/农历显示为当前语言格式
+        const localeForDate = dateLocaleMap[currentLanguage] || 'en-US';
+        const dateMain = document.getElementById('date-main');
+        const timeMain = document.getElementById('time-main');
+        const weekdayMain = document.getElementById('weekday-main');
+        const lunarMain = document.getElementById('lunar-main');
+        if (dateMain) dateMain.innerText = new Date().toLocaleDateString(localeForDate, {month:'long', day: 'numeric', year: 'numeric'});
+        if (timeMain) timeMain.innerText = new Date().toLocaleTimeString(localeForDate);
+        if (weekdayMain) weekdayMain.innerText = new Date().toLocaleDateString(localeForDate, {weekday:'long'});
+
+        // 农历（只在中文显示尝试使用 Intl with chinese calendar, 否则显示unavailable）
+        if (lunarMain) {
+            if (currentLanguage === 'zh') {
+                try {
+                    const opts = new Intl.DateTimeFormat('zh-CN-u-ca-chinese', {month:'long', day:'numeric'});
+                    lunarMain.innerText = opts.format(new Date());
+                } catch (e) {
+                    lunarMain.innerText = t('lunar_unavailable');
+                }
+            } else {
+                lunarMain.innerText = '';
+            }
+        }
+
+        // 如果已有天气代码，重新翻译天气描述并更新效果
+        if (lastWeatherCode !== null) {
+            const weatherDescEl = document.getElementById('weather-desc');
+            if (weatherDescEl) weatherDescEl.innerText = weatherCodeToDesc(lastWeatherCode);
+            generateWeatherEffects(lastWeatherCode);
+        }
+
+        // 更新页脚
+        const footer = document.querySelector('footer p');
+        if (footer) footer.textContent = t('copyright');
+    }
+
+    // --- Clock and Holidays ---
+    function startClock() {
+        setInterval(() => {
+            const localeForDate = dateLocaleMap[currentLanguage] || 'en-US';
+            const timeMain = document.getElementById('time-main');
+            const dateMain = document.getElementById('date-main');
+            const weekdayMain = document.getElementById('weekday-main');
+            if (timeMain) timeMain.innerText = new Date().toLocaleTimeString(localeForDate);
+            if (dateMain) dateMain.innerText = new Date().toLocaleDateString(localeForDate, {month:'long', day: 'numeric', year: 'numeric'});
+            if (weekdayMain) weekdayMain.innerText = new Date().toLocaleDateString(localeForDate, {weekday:'long'});
+            // update lunar each tick only when zh
+            const lunarMain = document.getElementById('lunar-main');
+            if (lunarMain && currentLanguage === 'zh') {
+                try { lunarMain.innerText = new Intl.DateTimeFormat('zh-CN-u-ca-chinese', {month:'long', day:'numeric'}).format(new Date()); }
+                catch(e) { lunarMain.innerText = t('lunar_unavailable'); }
+            }
+        }, 1000);
+    }
+
+    async function fetchCountryAndHolidays() {
+        try {
+            const res = await fetch('https://ipwho.is/');
+            const j = await res.json();
+            const cc = j && j.country_code ? j.country_code : null;
+            if (cc) fetchHolidays(cc);
+        } catch (e) { console.warn('Failed to fetch country for holidays', e); }
+    }
+
+    async function fetchHolidays(countryCode) {
+        try {
+            const year = new Date().getFullYear();
+            // Nager.Date public holidays API
+            const res = await fetch(`https://date.nager.at/api/v3/PublicHolidays/${year}/${countryCode}`);
+            if (!res.ok) return;
+            const list = await res.json();
+            // find today
+            const today = new Date().toISOString().slice(0,10);
+            const match = list.find(h => h.date === today);
+            const holidayEl = document.getElementById('holiday-main');
+            if (holidayEl) {
+                if (match) {
+                    lastHolidayName = (match.localName || match.name);
+                    holidayEl.innerText = t('holiday_today_prefix') + ' ' + lastHolidayName;
+                } else {
+                    lastHolidayName = null;
+                    holidayEl.innerText = t('no_holiday_today');
+                }
+            }
+        } catch (e) { console.warn('Holiday fetch error', e); }
+    }
+
     // --- 搜索引擎 ---
     let currentEngine = 'google';
     const searchInput = document.getElementById('main-search');
@@ -387,6 +1516,7 @@
         el.classList.add('active');
         const colors = { 'duck': '#de5833', 'bing': '#00809d', 'google': '#4285f4' };
         searchBtn.style.background = `linear-gradient(to bottom, ${colors[engine]}, #333)`;
+        searchInput.placeholder = t('search_' + engine);
     }
     function performSearch() {
         const q = searchInput.value;
@@ -417,7 +1547,7 @@
         }
     }
     async function changeCity() {
-        const newCity = prompt("Enter City Name:");
+        const newCity = prompt(t('enter_city'));
         if (!newCity) return;
         try {
             const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(newCity)}&limit=1`);
@@ -427,54 +1557,140 @@
                 localStorage.setItem('user_city_data', JSON.stringify(cityData));
                 fetchWeatherData(cityData.lat, cityData.lon, cityData.name);
             }
-        } catch (e) { alert("Busy"); }
-    }
-    async function fetchWeatherData(lat, lon, cityName) {
-        try {
-            const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
-            const data = await res.json();
-            document.getElementById('weather-city').innerText = cityName; 
-            document.getElementById('temp-display').innerText = Math.round(data.current_weather.temperature) + "°C";
-            document.getElementById('weather-desc').innerText = "Clear Sky";
-        } catch (e) {}
+        } catch (e) { alert(t('city_busy')); }
     }
 
-    // --- 贪吃蛇 ---
-    const canvas = document.getElementById('snakeGame');
-    const ctx = canvas.getContext('2d');
-    const gameOverEl = document.getElementById('game-over');
-    let box = 10, score = 0, gameActive = true, d, snake = [{x:100,y:100}], food = {x:50,y:50};
-    document.addEventListener("keydown", (e) => {
-        if([37,38,39,40].includes(e.keyCode)) e.preventDefault();
-        if(e.keyCode==37 && d!="RIGHT") d="LEFT";
-        if(e.keyCode==38 && d!="DOWN") d="UP";
-        if(e.keyCode==39 && d!="LEFT") d="RIGHT";
-        if(e.keyCode==40 && d!="UP") d="DOWN";
-    });
-    function draw() {
-        if(!gameActive) return;
-        ctx.fillStyle = "#222"; ctx.fillRect(0,0,200,200);
-        if(!d) {
-            ctx.fillStyle="white"; ctx.textAlign="center"; ctx.fillText("Press Keys",100,100); return;
-        }
-        snake.forEach((s,i) => { ctx.fillStyle=(i==0)?"#4285F4":"#A1C4FD"; ctx.fillRect(s.x,s.y,box,box); });
-        ctx.fillStyle="#FF5252"; ctx.fillRect(food.x,food.y,box,box);
-        let hX = snake[0].x, hY = snake[0].y;
-        if(d=="LEFT") hX-=box; if(d=="UP") hY-=box; if(d=="RIGHT") hX+=box; if(d=="DOWN") hY+=box;
-        if(hX==food.x && hY==food.y) {
-            score++; document.getElementById('game-score').innerText=score;
-            food={x:Math.floor(Math.random()*20)*box, y:Math.floor(Math.random()*20)*box};
-        } else snake.pop();
-        let nH = {x:hX, y:hY};
-        if(hX<0||hX>=200||hY<0||hY>=200||snake.some(s=>s.x==nH.x&&s.y==nH.y)) {
-            gameActive=false; gameOverEl.style.display="block";
-        }
-        snake.unshift(nH);
+    // --- Weather description mapping ---
+    function weatherCodeToDesc(code) {
+        const map = {
+            0: 'clear_sky', 1: 'mainly_clear', 2: 'partly_cloudy', 3: 'overcast',
+            45: 'fog', 48: 'depositing_rime_fog',
+            51: 'light_drizzle', 53: 'moderate_drizzle', 55: 'dense_drizzle',
+            56: 'light_freezing_drizzle', 57: 'dense_freezing_drizzle',
+            61: 'slight_rain', 63: 'moderate_rain', 65: 'heavy_rain',
+            66: 'light_freezing_rain', 67: 'heavy_freezing_rain',
+            71: 'slight_snow', 73: 'moderate_snow', 75: 'heavy_snow', 77: 'snow_grains',
+            80: 'slight_showers', 81: 'moderate_showers', 82: 'violent_showers',
+            85: 'slight_snow_showers', 86: 'heavy_snow_showers',
+            95: 'thunderstorm', 96: 'thunderstorm_slight_hail', 99: 'thunderstorm_heavy_hail'
+        };
+        const key = map[code] || 'unknown';
+        return t(key);
     }
-    let gameLoop = setInterval(draw, 100);
-    function resetGame() {
-        score=0; snake=[{x:100,y:100}]; d=null; gameActive=true; gameOverEl.style.display="none";
+
+    // --- Weather Effects ---
+    function generateWeatherEffects(weatherCode) {
+        const weatherCard = document.getElementById('weather-card');
+        const effectsContainer = document.getElementById('weather-effects');
+        
+        // 清空之前的效果
+        weatherCard.className = 'weather-card';
+        effectsContainer.innerHTML = '';
+        
+        // 根据天气代码添加对应效果
+        if ([0, 1].includes(weatherCode)) {
+            // 晴天或主要晴朗
+            weatherCard.classList.add('weather-clear');
+            effectsContainer.innerHTML = '<div class="weather-sun"></div>';
+        } else if ([2, 3].includes(weatherCode)) {
+            // 部分多云或阴天
+            effectsContainer.innerHTML = `
+                <div class="weather-cloud weather-cloud-1"></div>
+                <div class="weather-cloud weather-cloud-2"></div>
+            `;
+        } else if ([45, 48].includes(weatherCode)) {
+            // 有雾
+            weatherCard.classList.add('weather-fog');
+        } else if ([51, 53, 55, 56, 57, 61, 63, 65, 66, 67].includes(weatherCode)) {
+            // 下雨
+            effectsContainer.innerHTML = '<div class="weather-rain" id="rain-container"></div>';
+            createRaindrops();
+        } else if ([71, 73, 75, 77, 80, 81, 82, 85, 86].includes(weatherCode)) {
+            // 下雪
+            effectsContainer.innerHTML = '<div id="snow-container"></div>';
+            createSnowflakes();
+        } else if ([95, 96, 99].includes(weatherCode)) {
+            // 雷暴
+            effectsContainer.innerHTML = '<div class="weather-lightning" id="lightning-container"></div>';
+            createLightningFlashes();
+        }
     }
+
+    function createRaindrops() {
+        const rainContainer = document.getElementById('rain-container');
+        if (!rainContainer) return;
+        
+        for (let i = 0; i < 30; i++) {
+            const raindrop = document.createElement('div');
+            raindrop.className = 'raindrop';
+            raindrop.style.left = Math.random() * 100 + '%';
+            raindrop.style.animationDelay = Math.random() * 0.6 + 's';
+            raindrop.style.animationDuration = (0.5 + Math.random() * 0.2) + 's';
+            rainContainer.appendChild(raindrop);
+        }
+    }
+
+    function createSnowflakes() {
+        const snowContainer = document.getElementById('snow-container');
+        if (!snowContainer) return;
+        
+        for (let i = 0; i < 20; i++) {
+            const snowflake = document.createElement('div');
+            snowflake.className = 'snowflake';
+            snowflake.style.left = Math.random() * 100 + '%';
+            snowflake.style.animationDelay = Math.random() * 3 + 's';
+            snowflake.style.animationDuration = (2 + Math.random() * 2) + 's';
+            snowContainer.appendChild(snowflake);
+        }
+    }
+
+    function createLightningFlashes() {
+        const lightningContainer = document.getElementById('lightning-container');
+        if (!lightningContainer) return;
+        
+        // 创建闪电效果
+        const createFlash = () => {
+            const flash = document.createElement('div');
+            flash.className = 'lightning-flash';
+            flash.style.animationDelay = '0s';
+            lightningContainer.appendChild(flash);
+            
+            // 动画完成后移除
+            setTimeout(() => {
+                flash.remove();
+            }, 300);
+        };
+        
+        // 随机闪电
+        setInterval(() => {
+            if (Math.random() > 0.7) {
+                createFlash();
+            }
+        }, 2000);
+    }
+
+    // --- Fetch weather data (unified implementation) ---
+     async function fetchWeatherData(lat, lon, cityName) {
+         try {
+             const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+             const data = await res.json();
+             document.getElementById('weather-city').innerText = cityName;
+             if (data && data.current_weather) {
+                const weatherCode = data.current_weather.weathercode;
+                lastWeatherCode = weatherCode;
+                document.getElementById('temp-display').innerText = Math.round(data.current_weather.temperature) + "°C";
+                const desc = weatherCodeToDesc(weatherCode);
+                document.getElementById('weather-desc').innerText = desc;
+                // 生成天气效果
+                generateWeatherEffects(weatherCode);
+             } else {
+                 document.getElementById('temp-display').innerText = "--°C";
+                 document.getElementById('weather-desc').innerText = t('weather_unavailable');
+             }
+         } catch (e) {
+             document.getElementById('weather-desc').innerText = t('weather_error');
+         }
+     }
 
     // --- Blogger & Quote ---
     async function updateQuote() {
@@ -482,26 +1698,314 @@
             const res = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://zenquotes.io/api/random'));
             const data = await res.json();
             const q = JSON.parse(data.contents)[0];
+            const authorName = q.a ? q.a.trim() : 'Unknown';
             document.getElementById('quote-text').innerText = `"${q.q}"`;
-            document.getElementById('quote-author').innerText = `— ${q.a}`;
-        } catch(e) {}
-    }
-    async function fetchBloggerPosts() {
-        try {
-            const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://justinkwo.blogspot.com/feeds/posts/default?alt=json&max-results=3')}`);
-            const data = await res.json();
-            const entries = JSON.parse(data.contents).feed.entry;
-            document.getElementById('blogger-content').innerHTML = entries.map(e => `
-                <li style="margin-bottom:8px"><a href="${e.link.find(l=>l.rel=='alternate').href}" target="_blank" class="site-link" style="padding:0; font-size:14px">• ${e.title.$t}</a></li>
-            `).join('');
-        } catch(e) {}
+            document.getElementById('quote-author').innerText = `— ${authorName}`;
+            // set portrait based on author (DiceBear avatar); updates when quote changes
+            const portraitEl = document.getElementById('quote-portrait');
+            // ensure onerror is set before assigning src so fallback works
+            portraitEl.onerror = function() {
+                this.onerror = null;
+                this.src = 'https://avatars.dicebear.com/api/identicon/Unknown.png?scale=80&background=%23ffffff';
+            };
+            // use PNG variant and add timestamp to bypass caching
+            portraitEl.src = `https://avatars.dicebear.com/api/avataaars/${encodeURIComponent(authorName)}.png?scale=80&background=%23ffffff&v=${Date.now()}`;
+        } catch(e) {
+            document.getElementById('quote-text').innerText = '"' + t('unable_load_quote') + '"';
+            document.getElementById('quote-author').innerText = '— ' + t('unknown');
+            console.warn('Quote fetch error:', e);
+        }
+     }
+     async function fetchBloggerPosts() {
+         try {
+             const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://justinkwo.blogspot.com/feeds/posts/default?alt=json&max-results=3')}`);
+             const data = await res.json();
+             const parsed = JSON.parse(data.contents);
+             const entries = Array.isArray(parsed.feed.entry) ? parsed.feed.entry : [parsed.feed.entry];
+             if (!entries || entries.length === 0) {
+                 document.getElementById('blogger-content').innerHTML = '<div style="font-size: 13px; color: #888;">' + t('no_posts') + '</div>';
+                 return;
+             }
+             document.getElementById('blogger-content').innerHTML = '<ul style="list-style:none; padding:0; margin:0;">' + entries.map(e => {
+                 const linkObj = e.link.find(l => l.rel === 'alternate');
+                 const href = linkObj ? linkObj.href : '#';
+                 return `<li style="margin-bottom:8px"><a href="${href}" target="_blank" class="site-link" style="padding:0; font-size:14px">• ${e.title.$t}</a></li>`;
+             }).join('') + '</ul>';
+         } catch(e) {
+             document.getElementById('blogger-content').innerHTML = '<div style="font-size: 13px; color: #888;">' + t('unable_load_posts') + '</div>';
+             console.warn('Blogger fetch error:', e);
+         }
+      }
+
+      // --- Init ---
+      document.addEventListener('DOMContentLoaded', () => {
+          // 初始化语言选择器
+          const languageSelector = document.getElementById('language-selector');
+          languageSelector.value = currentLanguage;
+          languageSelector.addEventListener('change', (e) => {
+              changeLanguage(e.target.value);
+          });
+
+          // 初始化UI文本
+          updateUIText();
+
+          const localeForDate = dateLocaleMap[currentLanguage] || 'en-US';
+            // initial UI update
+            updateUIText();
+            initWeather(); updateQuote(); fetchBloggerPosts();
+            // start realtime clock
+            startClock();
+            // fetch holidays using ip geolocation
+            try { fetchCountryAndHolidays(); } catch(e) { console.warn('Holiday fetch skipped', e); }
+      });
+    // --- Sticky Navigation (improved, uses placeholder and recalculation on resize) ---
+    const navContainer = document.querySelector('.quick-nav-container');
+    let navOriginalTop = 0;
+    let navPlaceholder = null;
+
+    function updateNavOriginalTop() {
+        // compute the Y offset of the nav container relative to the document
+        const rect = navContainer.getBoundingClientRect();
+        navOriginalTop = window.scrollY + rect.top;
     }
 
-    // --- Init ---
-    document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('date-display').innerText = new Date().toLocaleDateString('en-US', {month:'long', day: 'numeric', year: 'numeric'});
-        initWeather(); updateQuote(); fetchBloggerPosts();
+    function enableSticky() {
+        if (navContainer.classList.contains('sticky')) return;
+        // insert placeholder to avoid layout jump
+        navPlaceholder = document.createElement('div');
+        navPlaceholder.style.height = navContainer.offsetHeight + 'px';
+        navContainer.parentNode.insertBefore(navPlaceholder, navContainer);
+        navContainer.classList.add('sticky');
+        document.body.classList.add('nav-sticky');
+    }
+
+    function disableSticky() {
+        if (!navContainer.classList.contains('sticky')) return;
+        navContainer.classList.remove('sticky');
+        document.body.classList.remove('nav-sticky');
+        if (navPlaceholder && navPlaceholder.parentNode) {
+            navPlaceholder.parentNode.removeChild(navPlaceholder);
+            navPlaceholder = null;
+        }
+    }
+
+    // handle scroll
+    window.addEventListener('scroll', () => {
+        const y = window.scrollY;
+        if (y >= navOriginalTop) enableSticky(); else disableSticky();
     });
+    // recalc on load & resize (debounced)
+    window.addEventListener('load', updateNavOriginalTop);
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            // remove sticky for measurement, then recalc
+            const wasSticky = navContainer.classList.contains('sticky');
+            if (wasSticky) disableSticky();
+            updateNavOriginalTop();
+            if (wasSticky && window.scrollY >= navOriginalTop) enableSticky();
+        }, 120);
+    });
+    // initial calculation
+    updateNavOriginalTop();
+
+    // --- Games modal logic ---
+    (function(){
+        const overlay = document.getElementById('gameModalOverlay');
+        const iframe = document.getElementById('gameIframe');
+        const titleEl = document.getElementById('gameModalTitle');
+        const fallback = document.getElementById('gameFallback');
+        const openLink = document.getElementById('gameOpenLink');
+        const closeBtn = document.getElementById('gameModalClose');
+
+        // open game (skip tiles that use internal implementations, e.g. data-internal="chess")
+        document.querySelectorAll('.game-tile').forEach(tile => {
+            if (tile.hasAttribute('data-internal')) return; // internal tile handled elsewhere
+            tile.addEventListener('click', () => {
+                const src = tile.getAttribute('data-src') || 'about:blank';
+                const titleKey = tile.getAttribute('aria-label').toLowerCase().replace(/\s+/g, '_');
+                const title = t(titleKey) || tile.getAttribute('data-title') || 'Game';
+                titleEl.innerText = title;
+                overlay.style.display = 'flex';
+                fallback.style.display = 'none';
+                iframe.src = src;
+                openLink.href = src;
+                // if src is about:blank show fallback message
+                if (src === 'about:blank') {
+                    iframe.style.display = 'none';
+                    fallback.style.display = 'flex';
+                } else {
+                    iframe.style.display = 'block';
+                    // if iframe fails to load embedding, show fallback after timer
+                    let handled = false;
+                    const onLoad = () => { handled = true; iframe.onload = null; };
+                    iframe.onload = onLoad;
+                    setTimeout(() => {
+                        if (!handled) { iframe.style.display = 'none'; fallback.style.display = 'flex'; }
+                    }, 2500);
+                }
+            });
+        });
+        
+        // close game modal
+        function closeGameModal() {
+            overlay.style.display = 'none';
+            iframe.src = 'about:blank';
+            fallback.style.display = 'none';
+        }
+        closeBtn.addEventListener('click', closeGameModal);
+        overlay.addEventListener('click', (e) => { if (e.target === overlay) closeGameModal(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && overlay.style.display === 'flex') closeGameModal(); });
+    })();
+
+    // chessboard internal game click handling (load libs then init)
+    (function(){
+        let chessGame = null;
+        let chessBoard = null;
+        const overlay = document.getElementById('chessModalOverlay');
+        const chessClose = document.getElementById('chessModalClose');
+        const chessNew = document.getElementById('chessNew');
+        const chessUndo = document.getElementById('chessUndo');
+        const chessStatus = document.getElementById('chessStatus');
+        const chessOpenExternal = document.getElementById('chessOpenExternal');
+
+        function loadScript(src) {
+            return new Promise((res, rej) => {
+                const s = document.createElement('script');
+                s.src = src; s.onload = res; s.onerror = rej;
+                document.head.appendChild(s);
+            });
+        }
+
+        // init after libs loaded
+        async function ensureLibs() {
+            if (window.Chess && window.Chessboard) return;
+            try {
+                if (!window.Chess) await loadScript('https://cdn.jsdelivr.net/npm/chess.js@1.0.0/chess.min.js');
+                if (!window.Chessboard) await loadScript('https://cdn.jsdelivr.net/npm/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js');
+            } catch (e) { console.warn('Failed to load chess libs', e); }
+        }
+
+        function updateStatus() {
+            if (!chessGame) return;
+            if (chessGame.in_checkmate()) chessStatus.textContent = t('checkmate');
+            else if (chessGame.in_draw()) chessStatus.textContent = t('draw');
+            else {
+                const turn = chessGame.turn() === 'w' ? t('white') : t('black');
+                chessStatus.textContent = turn + (chessGame.in_check() ? ' — ' + t('check') : '');
+            }
+        }
+
+        function initChessBoard() {
+            chessGame = new Chess();
+            const cfg = {
+                draggable: true,
+                position: chessGame.fen(),
+                onDragStart: function(source, piece) {
+                    if (chessGame.game_over()) return false;
+                    // only allow dragging pieces of the side to move
+                    if ((chessGame.turn() === 'w' && piece.search(/^b/) !== -1) ||
+                        (chessGame.turn() === 'b' && piece.search(/^w/) !== -1)) return false;
+                },
+                onDrop: function(source, target) {
+                    const move = chessGame.move({ from: source, to: target, promotion: 'q' });
+                    if (move === null) return 'snapback';
+                    updateStatus();
+                },
+                onSnapEnd: function() {
+                    chessBoard.position(chessGame.fen());
+                },
+                onMouseoutSquare: function(square, piece) {
+                    chessBoard.removeMarker(square);
+                },
+                onHighlightSquare: function(square) {
+                    const move = chessGame.move({ from: square, to: square, promotion: 'q' });
+                    if (move === null) return;
+                    chessBoard.addMarker(square, 'green');
+                }
+            };
+            chessBoard = Chessboard('chessBoard', cfg);
+            chessBoard.position('start');
+            updateStatus();
+        }
+
+        // open chess modal
+        document.querySelectorAll('.game-tile[data-internal="chess"]').forEach(tile => {
+            tile.addEventListener('click', async () => {
+                await ensureLibs();
+                initChessBoard();
+                const title = tile.getAttribute('data-title') || 'Game';
+                document.getElementById('chessModalTitle').innerText = t('international_chess');
+                document.getElementById('chessNew').textContent = t('new_game');
+                document.getElementById('chessUndo').textContent = t('undo');
+                document.getElementById('chessOpenExternal').textContent = t('open_external');
+                document.getElementById('chessStatus').textContent = t('ready');
+                overlay.style.display = 'flex';
+            });
+        });
+
+        // close modal
+         chessClose.addEventListener('click', () => {
+             overlay.style.display = 'none';
+             if (chessBoard) {
+                 chessBoard.destroy();
+                 chessBoard = null;
+             }
+             chessGame = null;
+         });
+
+        // close on overlay background click
+        overlay.addEventListener('click', (e) => { 
+            if (e.target === overlay) {
+                overlay.style.display = 'none';
+                if (chessBoard) {
+                    chessBoard.destroy();
+                    chessBoard = null;
+                }
+                chessGame = null;
+            }
+        });
+
+        // close on ESC key
+        document.addEventListener('keydown', (e) => { 
+            if (e.key === 'Escape' && overlay.style.display === 'flex') {
+                overlay.style.display = 'none';
+                if (chessBoard) {
+                    chessBoard.destroy();
+                    chessBoard = null;
+                }
+                chessGame = null;
+            }
+        });
+
+        // new game
+        chessNew.addEventListener('click', () => {
+            if (chessGame) {
+                chessGame.reset();
+                chessBoard.position('start');
+                updateStatus();
+            }
+        });
+
+        // undo move
+        chessUndo.addEventListener('click', () => {
+            if (chessGame && chessGame.history().length > 0) {
+                chessGame.undo();
+                chessBoard.position(chessGame.fen());
+                updateStatus();
+            }
+        });
+
+        // open external link
+        chessOpenExternal.addEventListener('click', (e) => {
+            const fen = chessGame ? chessGame.fen() : '';
+            const url = `https://lichess.org/editor?fen=${fen}`;
+            window.open(url, '_blank');
+            e.preventDefault();
+        });
+    })();
 </script>
+
 </body>
 </html>
